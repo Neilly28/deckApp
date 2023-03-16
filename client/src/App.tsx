@@ -1,7 +1,4 @@
 import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
 
 function App() {
   const [decks, setDecks] = useState([]);
@@ -33,26 +30,37 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <h1>Hello from React!</h1>
+    <div className="flex flex-col justify-center items-center max-w-3xl mx-auto p-8 bg-yellow-200">
+      <h1 className="text-center text-4xl font-bold mb-12 text-slate-700">
+        Welcome to DeckApp
+      </h1>
 
-      <ul>
+      <ul className="grid grid-cols-3 gap-4 text-xl mb-4">
         {decks.map((deck) => (
-          <li key={deck._id}>{deck.title}</li>
+          <li
+            key={deck._id}
+            className="flex justify-center items-center shadow-md p-4 rounded-lg bg-white text-slate-700 text-base font-bold text-center h-24"
+          >
+            {deck.title}
+          </li>
         ))}
       </ul>
 
-      <form onSubmit={handleCreateDeck}>
-        <label htmlFor="deck-title">Deck Title</label>
+      <form className="flex flex-col" onSubmit={handleCreateDeck}>
+        {/* <label htmlFor="deck-title">Deck Title</label> */}
         <input
+          className="mb-4 p-4 rounded-lg shadow-md"
           type="text"
           id="deck-title"
+          placeholder="Deck Title"
           value={title}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setTitle(e.target.value);
           }}
         />
-        <button>Create Deck</button>
+        <button className="bg-blue-500 hover:bg-blue-600 text-sm font-bold uppercase text-white px-4 py-1 rounded-lg">
+          Create Deck
+        </button>
       </form>
     </div>
   );
