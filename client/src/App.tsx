@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import Home from "./pages/Home";
 import Deck from "./pages/Deck";
+import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 
 function App() {

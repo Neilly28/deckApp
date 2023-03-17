@@ -42,6 +42,32 @@ app.delete("/decks/:deckId", async (req: Request, res: Response) => {
   res.json(deletedDeck);
 });
 
+// create card for deck
+app.post("/decks/:deckId/cards", async (req: Request, res: Response) => {
+  // get the deck id from the url
+  const deckId = req.params.deckId;
+
+  // get the deck from mongo
+  const deck = await Deck.findById(deckId);
+
+  // check if a deck exists
+  if (!deck) {
+    return res.status(404).json({ error: "deck not found" });
+  }
+
+  // get the card text from the request body
+  const { text } = req.body;
+
+  // push the text in the cards array
+  deck.cards.push(text);
+
+  // save the deck to the db
+  await deck.save();
+
+  // send back the response
+  res.json(deck);
+});
+
 // connect to db
 mongoose
   .connect(process.env.MONGODB_URI!)

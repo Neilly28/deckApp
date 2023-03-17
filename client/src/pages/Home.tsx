@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { Link } from "react-router-dom";
-
-type TDeck = {
-  title: string;
-  _id: string;
-};
+import { createDeck } from "../api/createDeck";
+import { deleteDeck } from "../api/deleteDeck";
+import { getDecks, TDeck } from "../api/getDecks";
 
 export default function Home() {
   const [decks, setDecks] = useState<TDeck[]>([]);
@@ -14,25 +12,15 @@ export default function Home() {
   // create new deck
   const handleCreateDeck = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:5000/decks", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title,
-      }),
-    });
-    setTitle("");
-    const newDeck = await response.json();
+    const newDeck = await createDeck(title);
     setDecks([...decks, newDeck]);
+    setTitle("");
   };
 
   // fetch all decks
   useEffect(() => {
     const fetchDecks = async () => {
-      const response = await fetch("http://localhost:5000/decks");
-      const allDecks = await response.json();
+      const allDecks = await getDecks();
       setDecks(allDecks);
     };
     fetchDecks();
@@ -40,9 +28,7 @@ export default function Home() {
 
   // delete a deck (takes in a parameter which corresponds to deck_.id)
   const handleDeleteDeck = async (deckId: string) => {
-    await fetch(`http://localhost:5000/decks/${deckId}`, {
-      method: "DELETE",
-    });
+    await deleteDeck(deckId);
     setDecks(decks.filter((deck) => deck._id !== deckId));
   };
 
@@ -54,20 +40,23 @@ export default function Home() {
 
       <ul className="grid grid-cols-3 gap-4 text-xl mb-4">
         {decks.map((deck) => (
-          <Link to={`decks/${deck._id}`}>
-            <li
-              key={deck._id}
-              className="flex justify-center items-center shadow-md p-4 rounded-lg bg-white hover:bg-slate-100 transition ease-in-out cursor-pointer text-slate-700 text-base font-bold text-center h-24 relative"
-            >
-              {deck.title}
-              <button
-                className="absolute top-1 right-1 w-5 h-5"
-                onClick={() => handleDeleteDeck(deck._id)}
+          <div className="relative">
+            <Link to={`decks/${deck._id}`}>
+              <li
+                key={deck._id}
+                className="flex justify-center items-center shadow-md p-4 rounded-lg bg-white hover:bg-slate-100 transition ease-in-out cursor-pointer text-slate-700 text-base font-bold text-center h-24"
               >
-                <AiFillCloseCircle className="w-full h-full text-gray-200 hover:text-red-500 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300" />
-              </button>
-            </li>
-          </Link>
+                {deck.title}
+              </li>
+            </Link>
+
+            <button
+              className="absolute top-1 right-1 w-5 h-5"
+              onClick={() => handleDeleteDeck(deck._id)}
+            >
+              <AiFillCloseCircle className="w-full h-full text-gray-200 hover:text-red-500 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300" />
+            </button>
+          </div>
         ))}
       </ul>
 
