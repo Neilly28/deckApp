@@ -33,12 +33,12 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center max-w-3xl mx-auto p-8 bg-yellow-200">
-      <h1 className="text-center text-4xl font-bold mb-12 text-slate-700">
+    <div className="flex flex-col gap-16 justify-center items-center max-w-3xl mx-auto p-8 bg-yellow-200 h-screen">
+      <h1 className="text-center text-4xl font-bold text-slate-700">
         Welcome to DeckApp
       </h1>
 
-      <ul className="grid grid-cols-3 gap-4 text-xl mb-4">
+      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xl">
         {decks.map((deck) => (
           <div className="relative">
             <Link to={`decks/${deck._id}`}>

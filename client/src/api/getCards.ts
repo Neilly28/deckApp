@@ -7,7 +7,7 @@ export type TDeck = {
   _id: string;
 };
 
-export const getDecks = async (): Promise<TDeck[]> => {
+export const getCards = async (): Promise<TDeck[]> => {
   const response = await fetch(`${API_URL}/decks`);
   return response.json();
 };

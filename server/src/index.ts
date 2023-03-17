@@ -3,6 +3,14 @@ import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 import Deck from "./models/Deck";
 import cors from "cors";
+import {
+  createDeckController,
+  getDecksController,
+  deleteDeckController,
+  createCardController,
+  getDeckController,
+  deleteCardController,
+} from "./controllers/deckController";
 
 const app = express();
 
@@ -15,58 +23,22 @@ app.use(express.json());
 // });
 
 //get all decks
-app.get("/decks", async (req: Request, res: Response) => {
-  const allDecks = await Deck.find();
-  res.json(allDecks);
-});
+app.get("/decks", getDecksController);
 
 // create new Deck
-app.post("/decks", async (req: Request, res: Response) => {
-  const { title } = req.body;
-  const newDeck = new Deck({
-    title,
-  });
-  const createdDeck = await newDeck.save();
-  res.json(createdDeck);
-});
+app.post("/decks", createDeckController);
 
 // delete a Deck
-app.delete("/decks/:deckId", async (req: Request, res: Response) => {
-  // get the deck id from the url
-  const deckId = req.params.deckId;
+app.delete("/decks/:deckId", deleteDeckController);
 
-  // delete the deck from the db
-  const deletedDeck = await Deck.findByIdAndDelete(deckId);
-
-  // return the deleted deck to the user
-  res.json(deletedDeck);
-});
+// get single deck
+app.get("/decks/:deckId", getDeckController);
 
 // create card for deck
-app.post("/decks/:deckId/cards", async (req: Request, res: Response) => {
-  // get the deck id from the url
-  const deckId = req.params.deckId;
+app.post("/decks/:deckId/cards", createCardController);
 
-  // get the deck from mongo
-  const deck = await Deck.findById(deckId);
-
-  // check if a deck exists
-  if (!deck) {
-    return res.status(404).json({ error: "deck not found" });
-  }
-
-  // get the card text from the request body
-  const { text } = req.body;
-
-  // push the text in the cards array
-  deck.cards.push(text);
-
-  // save the deck to the db
-  await deck.save();
-
-  // send back the response
-  res.json(deck);
-});
+// delete card
+app.delete("/decks/:deckId/cards/:index", deleteCardController);
 
 // connect to db
 mongoose
